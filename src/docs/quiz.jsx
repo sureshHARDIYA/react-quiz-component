@@ -1,16 +1,17 @@
 export const quiz =  {
-  "quizTitle": "React Quiz Component Demo",
-  "quizSynopsis": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim",
+  "quizTitle": "Fundamental aspects of exploratory data analysis",
+  "quizSynopsis": "The main objective of this chapter is to revise the fundamentals of EDA, what it is, key concepts of profiling and quality assessment main dimensions of EDA, main challenges and opportunities in EDA.",
   "questions": [
     {
-      "question": "How can you access the state of a component from inside of a member function?",
+      "question": "Which task is not _performed_ in data cleaning stage?",
+      "questionDescription": "<pre>import numpy as np <br/>np.array(['1', '2', '3'])</pre>",
       "questionType": "text",
       "answerSelectionType": "single",
       "answers": [
-        "this.getState()",
-        "this.prototype.stateValue",
-        "this.state",
-        "this.values"
+        "duplicates check",
+        "error check",
+        "transform data",
+        "missing value check"
       ],
       "correctAnswer": "3",
       "messageForCorrectAnswer": "Correct answer. Good job.",
@@ -94,4 +95,4 @@ export const quiz =  {
       "point": "20"
     },
   ]
-} 
+}

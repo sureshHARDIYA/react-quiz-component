@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
+import "./styles.css";
 import Core from './Core';
 import { defaultLocale } from './Locale';
-import "./styles.css";
 
 class Quiz extends Component {
   constructor(props){
@@ -29,7 +30,7 @@ class Quiz extends Component {
     if(!quiz) {
       console.error("Quiz object is required.");
       return false;
-    } 
+    }
 
     const { questions } = quiz;
     if(!questions ) {
@@ -43,7 +44,7 @@ class Quiz extends Component {
         console.error("Field 'question' is required.");
         return false;
       }
-  
+
       if(!questionType) {
         console.error("Field 'questionType' is required.");
         return false;
@@ -53,7 +54,7 @@ class Quiz extends Component {
           return false;
         }
       }
-  
+
       if(!answers) {
         console.error("Field 'answers' is required.");
         return false;
@@ -61,25 +62,25 @@ class Quiz extends Component {
         if(!Array.isArray(answers)) {
           console.error("Field 'answers' has to be an Array");
           return false;
-        } 
+        }
       }
-  
+
       if(!correctAnswer) {
         console.error("Field 'correctAnswer' is required.");
         return false;
       }
-  
+
       if(!answerSelectionType) {
         // Default single to avoid code breaking due to automatic version upgrade
         console.warn("Field answerSelectionType should be defined since v0.3.0. Use single by default.")
-        answerSelectionType = answerSelectionType || 'single'; 
+        answerSelectionType = answerSelectionType || 'single';
       }
-  
+
       if(answerSelectionType == 'single' && !(typeof answerSelectionType === 'string' || answerSelectionType   instanceof String) ) {
         console.error("answerSelectionType is single but expecting String in the field correctAnswer");
         return false;
       }
-  
+
       if(answerSelectionType == 'multiple' && !Array.isArray(correctAnswer)) {
         console.error("answerSelectionType is multiple but expecting Array in the field correctAnswer");
         return false;
@@ -101,14 +102,14 @@ class Quiz extends Component {
       ...defaultLocale,
       ...quiz.appLocale
     };
-    
+
     let questions = quiz.questions;
       if(shuffle) {
         questions = this.shuffleQuestions(questions);
       }
 
       questions = questions.map((question, index) => ({
-        ...question, 
+        ...question,
         questionIndex : index + 1
       }));
 
@@ -118,17 +119,16 @@ class Quiz extends Component {
             <div>
               <h2>{quiz.quizTitle}</h2>
               <div> {appLocale.landingHeaderText.replace("<questionLength>" , quiz.questions.length )}</div>
-              { quiz.quizSynopsis && 
+              { quiz.quizSynopsis &&
                   <div className="quiz-synopsis">
                       {quiz.quizSynopsis}
-                  </div> 
+                  </div>
               }
               <div className="startQuizWrapper">
                 <button onClick={() => this.start()} className="startQuizBtn btn">{appLocale.startQuizBtn}</button>
               </div>
             </div>
           }
-
           {
             this.state.start && <Core questions={questions} showDefaultResult={showDefaultResult} onComplete={onComplete} customResultPage={customResultPage} showInstantFeedback={showInstantFeedback} continueTillCorrect={continueTillCorrect} appLocale={appLocale}/>
           }
@@ -140,9 +140,9 @@ class Quiz extends Component {
 Quiz.propTypes = {
   quiz: PropTypes.object,
   shuffle: PropTypes.bool,
-  showDefaultResult: PropTypes.bool,
   onComplete: PropTypes.func,
   customResultPage: PropTypes.func,
+  showDefaultResult: PropTypes.bool,
   showInstantFeedback: PropTypes.bool,
   continueTillCorrect: PropTypes.bool
 };

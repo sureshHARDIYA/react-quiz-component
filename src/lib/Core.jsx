@@ -34,7 +34,7 @@ class Core extends Component {
       if(userInput[currentQuestionIndex] == undefined) {
         userInput.push(index)
       }
-  
+
       if(index == correctAnswer) {
         if( incorrect.indexOf(currentQuestionIndex) < 0 && correct.indexOf(currentQuestionIndex) < 0) {
           correct.push(currentQuestionIndex);
@@ -46,7 +46,7 @@ class Core extends Component {
           2: {disabled: true},
           3: {disabled: true}
         }
-  
+
         this.setState((prevState) => {
           const buttons = Object.assign(
             {},
@@ -60,7 +60,7 @@ class Core extends Component {
           );
           return { buttons };
         })
-  
+
         this.setState({
           correctAnswer: true,
           incorrectAnswer: false,
@@ -71,7 +71,7 @@ class Core extends Component {
         if( correct.indexOf(currentQuestionIndex) < 0 && incorrect.indexOf(currentQuestionIndex) < 0 ) {
           incorrect.push(currentQuestionIndex)
         }
-  
+
         if(continueTillCorrect) {
           this.setState((prevState) => {
             const buttons = Object.assign(
@@ -92,7 +92,7 @@ class Core extends Component {
             2: {disabled: true},
             3: {disabled: true}
           }
-  
+
           this.setState((prevState) => {
             const buttons = Object.assign(
               {},
@@ -106,12 +106,12 @@ class Core extends Component {
             );
             return { buttons };
           })
-  
+
           this.setState({
             showNextQuestionButton: true,
           })
         }
-  
+
         this.setState({
           incorrectAnswer: true,
           correctAnswer: false,
@@ -119,19 +119,19 @@ class Core extends Component {
         })
       }
     } else {
-      
+
       let maxNumberOfMultipleSelection = correctAnswer.length;
 
       if(userInput[currentQuestionIndex] == undefined) {
         userInput[currentQuestionIndex] = []
       }
-      
+
       if(userInput[currentQuestionIndex].length < maxNumberOfMultipleSelection) {
         userInput[currentQuestionIndex].push(index)
 
         if(correctAnswer.includes(index)) {
           if(userInput[currentQuestionIndex].length <= maxNumberOfMultipleSelection)  {
-          
+
             this.setState((prevState) => {
               const buttons = Object.assign(
                 {},
@@ -145,11 +145,11 @@ class Core extends Component {
               );
               return { buttons };
             })
-  
-          
+
+
           }
         } else {
-          if(userInput[currentQuestionIndex].length <= maxNumberOfMultipleSelection)  { 
+          if(userInput[currentQuestionIndex].length <= maxNumberOfMultipleSelection)  {
             this.setState((prevState) => {
               const buttons = Object.assign(
                 {},
@@ -242,7 +242,7 @@ class Core extends Component {
     if(!explanation) {
       return (null);
     }
-    
+
     if(isResultPage) {
       return (
         <div className="explaination">
@@ -325,11 +325,11 @@ class Core extends Component {
 
       // Default single to avoid code breaking due to automatic version upgrade
       let answerSelectionType = question.answerSelectionType || 'single';
-      
+
       return (
         <div className="result-answer-wrapper" key={index+1}>
 
-        <h3 dangerouslySetInnerHTML={this.rawMarkup(`Q${question.questionIndex}: ${question.question}`)}/> 
+        <h3 dangerouslySetInnerHTML={this.rawMarkup(`Q${question.questionIndex}: ${question.question}`)}/>
         {
           this.renderTags(answerSelectionType, question.correctAnswer.length)
         }
@@ -345,14 +345,18 @@ class Core extends Component {
   }
 
   rawMarkup = (data) => {
-    let rawMarkup = marked(data, {sanitize: true});
+    let rawMarkup = marked(data);
     return { __html: rawMarkup };
+  }
+
+  createMarkup = (data) => {
+    return {__html: data };
   }
 
   renderAnswers = (question, buttons) => {
     const { answers, correctAnswer, questionType } = question;
     let { answerSelectionType } = question;
-    
+
     // Default single to avoid code breaking due to automatic version upgrade
     answerSelectionType = answerSelectionType || 'single';
 
@@ -376,12 +380,12 @@ class Core extends Component {
   }
 
   renderTags(answerSelectionType, numberOfSelection) {
-    const { 
+    const {
       appLocale: {
         singleSelectionTagText,
         multipleSelectionTagText,
         pickNumberOfSelection
-      } 
+      }
     } = this.props;
 
     return (
@@ -399,19 +403,20 @@ class Core extends Component {
 
   render() {
     const { questions, appLocale } = this.props;
-    const { 
-      correct, 
-      incorrect, 
-      userInput, 
-      currentQuestionIndex, 
-      correctAnswer, 
-      incorrectAnswer, 
-      endQuiz, 
-      showInstantFeedback, 
-      buttons, 
-      onComplete, 
-      showNextQuestionButton, 
-      showDefaultResult, 
+    const totalQuestions = Array.isArray(questions) && questions.length || 0;
+    const {
+      correct,
+      incorrect,
+      userInput,
+      currentQuestionIndex,
+      correctAnswer,
+      incorrectAnswer,
+      endQuiz,
+      showInstantFeedback,
+      buttons,
+      onComplete,
+      showNextQuestionButton,
+      showDefaultResult,
       customResultPage
     } = this.state;
 
@@ -446,44 +451,77 @@ class Core extends Component {
 
     // Default single to avoid code breaking due to automatic version upgrade
     answerSelectionType = answerSelectionType || 'single';
-    
+
     return (
       <div className="questionWrapper">
         {!endQuiz &&
           <div className="questionWrapperBody">
-            <div className="questionModal">
-              {incorrectAnswer && showInstantFeedback && 
-                <div className="alert incorrect">{ this.renderMessageforIncorrectAnswer(question) }</div>
-              }
-              { correctAnswer && showInstantFeedback && 
-                <div className="alert correct">
-                  { this.renderMessageforCorrectAnswer(question) } 
-                  { this.renderExplanation(question, false) }
-                </div>
+
+            <div className="mainQuestion">
+            <div className="questionMeta">
+              { appLocale.question } { currentQuestionIndex + 1 } of {totalQuestions}
+              {
+                this.renderTags(answerSelectionType, question.correctAnswer.length)
               }
             </div>
-            <div>{ appLocale.question } { currentQuestionIndex + 1 }:</div>
-            <h3 dangerouslySetInnerHTML={this.rawMarkup(question.question)}/> 
+            <h3 dangerouslySetInnerHTML={this.rawMarkup(question.question)}/>
+
             {
-              this.renderTags(answerSelectionType, question.correctAnswer.length)
+              question.questionDescription && <div className="description" dangerouslySetInnerHTML={this.createMarkup(question.questionDescription)} />
             }
-            {
-              this.renderAnswers(question, buttons)
-            }
+            </div>
+            <div className="answerPanel">
+              <div className="btnGroup">
+              {
+                this.renderAnswers(question, buttons)
+              }
+              </div>
+              <div className="questionModal">
+                {incorrectAnswer && showInstantFeedback &&
+                  <div className="explanation">
+                    <div >
+                      <div className="o-circle c-container__circle o-circle__sign--failure">
+                       <div className="o-circle__sign"></div>
+                      </div>
+                    </div>
+                    <div className="alert incorrect">
+                    { this.renderMessageforIncorrectAnswer(question) }
+                    { this.renderExplanation(question, false) }
+                    </div>
+                  </div>
+                }
+                { correctAnswer && showInstantFeedback &&
+                  <div className="explanation">
+                    <div>
+                    <div className="o-circle c-container__circle o-circle__sign--success">
+                      <div className="o-circle__sign"></div>
+                    </div>
+                    </div>
+                    <div className="alert correct">
+                      { this.renderMessageforCorrectAnswer(question) }
+                      { this.renderExplanation(question, false) }
+                    </div>
+                 </div>
+                }
+              </div>
+            </div>
             { showNextQuestionButton &&
-              <div><button onClick={() => this.nextQuestion(currentQuestionIndex)} className="nextQuestionBtn btn">{appLocale.nextQuestionBtn}</button></div>
+              <div className="metaNav">
+                <button disabled={currentQuestionIndex === 0} onClick={() => this.nextQuestion(currentQuestionIndex - 1)} className="prevQuestionBtn btn">{appLocale.previousQuestionBtn}</button>
+                <button disabled={currentQuestionIndex === totalQuestions} onClick={() => this.nextQuestion(currentQuestionIndex)} className="nextQuestionBtn btn">{appLocale.nextQuestionBtn}</button>
+              </div>
             }
           </div>
         }
         { endQuiz && showDefaultResult && customResultPage == null &&
             <div className="card-body">
             <h2>
-              {appLocale.resultPageHeaderText.replace("<correctIndexLength>", correct.length).replace("<questionLength>", questions.length) } 
+              {appLocale.resultPageHeaderText.replace("<correctIndexLength>", correct.length).replace("<questionLength>", questions.length) }
             </h2>
             <h2>
               { appLocale.resultPagePoint.replace("<correctPoints>", correctPoints).replace("<totalPoints>", totalPoints) }
             </h2>
-            <br/> 
+            <br/>
               { this.renderQuizResultFilter() }
               { this.renderQuizResultQuestions() }
             </div>
