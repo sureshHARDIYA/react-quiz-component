@@ -20,14 +20,17 @@ export const quiz =  {
       "point": "20"
     },
     {
-      "question": "ReactJS is developed by _____?",
+      "question": "Which of the following is true?",
       "questionType": "text",
       "answerSelectionType": "single",
       "answers": [
-        "Google Engineers",
-        "Facebook Engineers"
+        "Data = Model + Error",
+        "Model = Data + Error",
+        "Model = Data + Error",
+        "Data = Model - Error",
+        "None"
       ],
-      "correctAnswer": "2",
+      "correctAnswer": "1",
       "messageForCorrectAnswer": "Correct answer. Good job.",
       "messageForIncorrectAnswer": "Incorrect answer. Please try again.",
       "explanation": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
